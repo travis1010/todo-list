@@ -19,7 +19,7 @@
       <ul id='list-list'></ul>
       
     </div>
-    <div id='list-area'></div>
+    <div id='todo-area'></div>
   </div>
 
   <div id='footer'></div>
@@ -33,6 +33,22 @@
       <input type='text' name='description' placeholder="Enter Description">
       <button type='submit' name='submit'>Submit</button>
       <button onclick='cancelNewList()'>Cancel</button>
+    </form>
+  </div>
+
+  <div id="todo-form-container" class='form-container'>
+    <form id="todo-form" class='form' onsubmit="submitTodoForm(event, this)">
+      <h3>Create New Todo</h3>
+      <label for='title'>Title:</label>
+      <input type='text' name='title' placeholder="Enter Title" required>
+      <label for='description'>Description:</label>
+      <input type='text' name='description' placeholder="Enter Description">
+      <label for='due-date'>Due Date:</label>
+      <input type='text' name='due-date' placeholder="Enter Due Date">
+      <label for='priority'>Priority:</label>
+      <input type='text' name='priority' placeholder="Enter Priority">
+      <button type='submit' name='submit'>Submit</button>
+      <button onclick='cancelNewTodo()'>Cancel</button>
     </form>
   </div>
 </body>

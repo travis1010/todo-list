@@ -20,6 +20,7 @@ class List {
     this.description = description;
     this.complete = false;
     this.todoList = [];
+    this.dataKey = null;
   }
 
   checkCompletion(){
@@ -32,6 +33,20 @@ class List {
 
   printList() {
     this.todoList.forEach((todo) => console.table(todo));
+  }
+
+  get length() {
+    return this.todoList.length;
+  }
+
+  get numCompleted() {
+    let count = 0;
+    this.todoList.forEach((todo) => {
+      if (todo.complete) {
+        count++;
+      }
+    });
+    return count;
   }
 }
 
