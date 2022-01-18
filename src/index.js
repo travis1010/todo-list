@@ -2,6 +2,8 @@ import { compareAsc, format } from 'date-fns';
 import {Todo, List} from './todolists.js';
 import * as UI from './ui.js';
 
+const lists = [];
+
 window.createNewList = function() {
   UI.displayNewListForm();
 }
@@ -10,6 +12,13 @@ window.cancelNewList = function() {
   UI.hideNewListForm();
 }
 
+window.submitListForm = function(e, form) {
+  e.preventDefault();
+  lists.push(new List(form.title.value, form.description.value));
+  UI.displayLists(lists);
+  UI.hideNewListForm();
+  UI.clearListForm();
+}
 
 
 
@@ -28,7 +37,7 @@ defaultList.addTodo(item3);
 defaultList.addTodo(item4);
 defaultList.checkCompletion();
 
-console.table(defaultList);
+//console.table(defaultList);
 
 
 item1.toggleComplete();
@@ -38,6 +47,6 @@ item4.toggleComplete();
 
 defaultList.checkCompletion();
 
-console.table(defaultList);
+//console.table(defaultList);
 
-defaultList.printList();
+//defaultList.printList();
