@@ -56,6 +56,10 @@ body {
   background-color: rgba(0, 0, 0, 0.2);
 }
 
+.list-item button {
+  z-index: 5;
+}
+
 #todo-area {
   height: 100%;
   flex-grow: 1;;
