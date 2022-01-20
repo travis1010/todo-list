@@ -4,6 +4,7 @@ import * as UI from './ui.js';
 
 export const lists = (() => {
   let count = 0;
+  let lastDisplayedList = null;
   const arr = []; 
   const addList = (list) => {
     arr.push(list);
@@ -17,10 +18,32 @@ export const lists = (() => {
     })
     return arr[index];
   }
+
+  const deleteList = (dataKey) => {
+    const index = arr.findIndex((list) => {
+      return list.dataKey == dataKey;
+    })
+    arr.splice(index, 1);
+  }
+
+  const getTodo = (dataKey) => {
+    let currentTodo = null;
+    arr.forEach((list) => {
+      list.todoList.forEach((todo) => {
+        if (todo.dataKey == dataKey) {
+          currentTodo = todo;
+        }
+      })
+    })
+    return currentTodo;
+  }
   return {
     arr,
     addList,
-    getList
+    getList,
+    getTodo,
+    deleteList,
+    lastDisplayedList,
   }
 })();
 
@@ -37,6 +60,24 @@ window.cancelNewList = function() {
   UI.hideNewListForm();
 }
 
+window.clickCheckbox = function(todoDataKey) {
+  console.log('todo data key:');
+  console.log(todoDataKey);
+  const currentTodo = lists.getTodo(todoDataKey);
+  currentTodo.toggleComplete();
+  UI.displayLists(lists);
+}
+
+window.deleteList = function(e, dataKey) {
+  e.stopPropagation();
+  lists.deleteList(dataKey);
+  UI.displayLists(lists);
+  if(lists.lastDisplayedList == dataKey) {
+    UI.clearTodoArea();
+  }
+  
+}
+
 window.submitListForm = function(e, form) {
   e.preventDefault();
   lists.addList(new List(form.title.value, form.description.value));
@@ -51,6 +92,7 @@ window.submitTodoForm = function(e, form) {
   currentList.addTodo(new Todo(form.title.value, form.description.value, 'test', 'test'));
   UI.hideTodoForm();
   UI.displayTodoList(currentList);
+  UI.clearTodoForm();
 }
 
 window.createNewTodo = function(dataKey) {
@@ -83,9 +125,9 @@ defaultList.checkCompletion();
 //console.table(defaultList);
 
 
-item1.toggleComplete();
+//item1.toggleComplete();
 item2.toggleComplete();
-item3.toggleComplete();
+//item3.toggleComplete();
 item4.toggleComplete();
 
 defaultList.checkCompletion();

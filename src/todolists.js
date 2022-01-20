@@ -1,18 +1,25 @@
 import { compareAsc, format } from 'date-fns';
 
+let todoCount = 0;
+
 class Todo {
+  
   constructor(title, description, dueDate, priority) {
     this.title = title;
     this.description = description;
     this.dueDate = dueDate;
     this.priority = priority;
     this.complete = false;
+    this.dataKey = todoCount;
+    todoCount++;
   }
 
   toggleComplete() {
     this.complete = !this.complete;
   }
 }
+
+
 
 class List {
   constructor(title, description) {

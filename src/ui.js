@@ -1,3 +1,4 @@
+import { lists } from ".";
 
 function displayNewListForm() {
   document.getElementById('list-form-container').style.display = 'flex';
@@ -40,8 +41,14 @@ function createListItem(list){
   listName.textContent = list.title;
   const amountCompleted = document.createElement('span');
   amountCompleted.textContent = `${list.numCompleted}/${list.length}`
+
+  const deleteButton = document.createElement('button');
+  deleteButton.setAttribute('onclick', `deleteList(event, ${list.dataKey})`);
+  deleteButton.textContent = 'Delete';
+
   newList.appendChild(listName);
   newList.appendChild(amountCompleted);
+  newList.appendChild(deleteButton);
   newList.classList.add('list-item');
   newList.setAttribute('data-key', list.dataKey);
   newList.setAttribute('onclick', `showTodoList(${list.dataKey})`);
@@ -75,17 +82,26 @@ function displayTodoList(list) {
   todoArea.appendChild(description);
   todoArea.appendChild(addItem);
   todoArea.appendChild(checkList);
+
+  lists.lastDisplayedList = list.dataKey;
 }
 
 function createTodoItem(todo) {
   const newTodo = document.createElement('li');
+  newTodo.setAttribute('data-key', todo.dataKey);
   const checkBox = document.createElement('input');
   checkBox.type = 'checkbox';
+  if (todo.complete) {
+    checkBox.checked = true;
+  }
+  
+  checkBox.setAttribute('onclick', `clickCheckbox(${todo.dataKey})`)
+
   newTodo.appendChild(checkBox);
   const title = document.createElement('span');
   title.textContent = todo.title;
   newTodo.appendChild(title);
-
+  
   return newTodo;
 }
 
@@ -95,4 +111,20 @@ function clearListForm() {
   listForm.description.value = '';
 }
 
-export {displayNewListForm, hideNewListForm, displayLists, clearListForm, displayTodoList, displayTodoForm, hideTodoForm, setFormDataKey};
+function clearTodoForm() {
+  const todoForm = document.getElementById('todo-form');
+  todoForm.title.value = '';
+  todoForm.description.value = '';
+  todoForm['due-date'].value = '';
+  todoForm.priority.value = '';
+}
+
+function clearTodoArea() {
+  const todoArea = document.getElementById('todo-area');
+  while(todoArea.firstChild) {
+    todoArea.removeChild(todoArea.firstChild);
+  }
+}
+
+export {displayNewListForm, hideNewListForm, displayLists, clearListForm, displayTodoList, displayTodoForm, hideTodoForm, setFormDataKey, clearTodoArea,
+clearTodoForm,};
