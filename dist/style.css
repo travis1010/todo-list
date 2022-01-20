@@ -24,6 +24,9 @@ body {
 
 #header h1 {
   margin-left: 20px;
+  text-shadow: 2px 2px #535353;
+  color: #1e538f;
+  font-size: 32px;
 }
 
 
@@ -39,6 +42,22 @@ body {
   background-color: gray;
 }
 
+#new-list-btn {
+  border: 2px solid black;
+  background-color: #1e538f;
+  cursor: pointer;
+  padding: 3px;
+  width: 100%;
+  font-size: 16px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  color:rgb(219, 219, 219);
+}
+
+#new-list-btn:hover {
+  filter: brightness(110%);
+}
+
 #left-bar ul {
   list-style: none;
 }
@@ -49,20 +68,31 @@ body {
   align-items: center;
   padding: 3px;
   cursor: pointer;
-  border: 1px solid black;
+  border: 2px solid black;
+  font-size: 16px;
+  border-top: none;
+  background-color: #535353;
+  color: rgb(219, 219, 219);
 }
 
 .list-item:hover {
-  background-color: rgba(0, 0, 0, 0.2);
+  filter: brightness(110%);
 }
 
 .list-item button {
-  z-index: 5;
+  margin-left: 3px;
 }
 
 #todo-area {
   height: 100%;
-  flex-grow: 1;;
+  flex-grow: 1;
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 20px;
+}
+
+.todo-list-container {
+  background-color: gray;
 }
 
 .todo-list {
@@ -70,10 +100,26 @@ body {
   list-style: none;
 }
 
+.todo-list input[type="checkbox"]{
+  margin: 5px;
+}
+
+#todo-area p {
+  font-size: 15px;
+  font-style: italic;
+}
+
+.todo-item {
+  cursor: pointer;
+}
+
 #footer {
   width: 100%;
   height: 50px;
   background-color: gray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 

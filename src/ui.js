@@ -39,6 +39,7 @@ function createListItem(list){
   const newList = document.createElement('li');
   const listName = document.createElement('span');
   listName.textContent = list.title;
+  const rightSideOfItem = document.createElement('div');
   const amountCompleted = document.createElement('span');
   amountCompleted.textContent = `${list.numCompleted}/${list.length}`
 
@@ -46,9 +47,11 @@ function createListItem(list){
   deleteButton.setAttribute('onclick', `deleteList(event, ${list.dataKey})`);
   deleteButton.textContent = 'Delete';
 
+  rightSideOfItem.appendChild(amountCompleted);
+  rightSideOfItem.appendChild(deleteButton);
+
   newList.appendChild(listName);
-  newList.appendChild(amountCompleted);
-  newList.appendChild(deleteButton);
+  newList.appendChild(rightSideOfItem);
   newList.classList.add('list-item');
   newList.setAttribute('data-key', list.dataKey);
   newList.setAttribute('onclick', `showTodoList(${list.dataKey})`);
@@ -57,6 +60,9 @@ function createListItem(list){
 
 function displayTodoList(list) {
   const todoArea = document.getElementById('todo-area');
+
+  const todoListContainer = document.createElement('div');
+  todoListContainer.classList.add('todo-list-container');
 
   const header = document.createElement('h2');
   header.textContent = list.title;
@@ -73,15 +79,19 @@ function displayTodoList(list) {
   const checkList = document.createElement('ul');
   list.todoList.forEach((todo) => {
     const newTodo = createTodoItem(todo);
+    newTodo.setAttribute('onclick', 'console.log("clicked!", this)');
+    newTodo.classList.add('todo-item');
     checkList.appendChild(newTodo);
   })
 
   checkList.classList.add('todo-list');
 
-  todoArea.appendChild(header);
-  todoArea.appendChild(description);
-  todoArea.appendChild(addItem);
-  todoArea.appendChild(checkList);
+  todoListContainer.appendChild(header);
+  todoListContainer.appendChild(description);
+  todoListContainer.appendChild(addItem);
+  todoListContainer.appendChild(checkList);
+
+  todoArea.appendChild(todoListContainer);
 
   lists.lastDisplayedList = list.dataKey;
 }

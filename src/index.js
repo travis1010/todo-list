@@ -115,26 +115,17 @@ let item4 = new Todo('Work Out', 'leg day', 'date', 4)
 
 
 
-let defaultList = new List('Default', 'desc');
+let defaultList = new List('Default', 'This is where the description goes...');
 defaultList.addTodo(item1);
 defaultList.addTodo(item2);
 defaultList.addTodo(item3);
 defaultList.addTodo(item4);
 defaultList.checkCompletion();
 
-//console.table(defaultList);
-
-
-//item1.toggleComplete();
 item2.toggleComplete();
-//item3.toggleComplete();
 item4.toggleComplete();
 
 defaultList.checkCompletion();
-
-//console.table(defaultList);
-
-//defaultList.printList();
 
 lists.addList(defaultList);
 UI.displayLists(lists);
