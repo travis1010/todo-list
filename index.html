@@ -7,6 +7,8 @@
   <title>Todo List</title>
   <script src='main.js' defer></script>
   <link rel='stylesheet' href='./style.css'>
+  <!-- font awesome file-->
+  <script src='./assets/all.js' defer></script>
 </head>
 <body>
   <div id='header'>
@@ -45,8 +47,8 @@
       <input type='text' name='description' placeholder="Enter Description">
       <label for='due-date'>Due Date:</label>
       <input type='text' name='due-date' placeholder="Enter Due Date">
-      <label for='priority'>Priority:</label>
-      <input type='text' name='priority' placeholder="Enter Priority">
+      <label for='priority' id='prio-label'>Priority: Medium</label>
+      <input type="range" min="1" max="3" value="2" class="slider" name="priority" oninput="updatePrio(this)">
       <button type='submit' name='submit'>Submit</button>
       <button onclick='cancelNewTodo()'>Cancel</button>
     </form>
