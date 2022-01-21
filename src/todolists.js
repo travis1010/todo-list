@@ -8,7 +8,7 @@ class Todo {
     this.title = title;
     this.description = description;
     this.dueDate = dueDate;
-    this.priority = priority;
+    this.priority = parsePriority(priority)
     this.complete = false;
     this.dataKey = todoCount;
     todoCount++;
@@ -17,8 +17,25 @@ class Todo {
   toggleComplete() {
     this.complete = !this.complete;
   }
+
+  
 }
 
+function parsePriority(num) {
+  let currentPrio = null;
+  switch (num) {
+    case '1':
+      currentPrio = 'Low';
+      break;
+    case '2':
+      currentPrio = 'Medium';
+      break;
+    case '3':
+      currentPrio = 'High';
+      break;
+  }
+  return currentPrio || 'Medium';
+}
 
 
 class List {
@@ -57,4 +74,4 @@ class List {
   }
 }
 
-export {Todo, List};
+export {Todo, List, parsePriority};

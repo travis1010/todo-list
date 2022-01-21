@@ -38,7 +38,7 @@ body {
 
 #left-bar {
   height: 100%;
-  width: 200px;
+  width: 240px;
   background-color: gray;
 }
 
@@ -52,6 +52,7 @@ body {
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
   color:rgb(219, 219, 219);
+  text-align: center;
 }
 
 #new-list-btn:hover {
@@ -75,12 +76,32 @@ body {
   color: rgb(219, 219, 219);
 }
 
+.list-name {
+  max-width: 160px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
 .list-item:hover {
   filter: brightness(110%);
 }
 
 .list-item button {
   margin-left: 3px;
+}
+
+.delete-btn {
+  width: 22px;
+  border: 1px solid black;
+  border-radius: 3px;
+  padding: 2px;
+  background-color: gray;
+}
+
+.delete-btn:hover {
+  filter: brightness(110%);
+  color: rgb(24, 24, 24)
 }
 
 #todo-area {
@@ -91,13 +112,59 @@ body {
   margin-left: 20px;
 }
 
+#add-todo-btn {
+  border: 2px solid black;
+  border-bottom: none;
+  background-color: #1e538f;
+  cursor: pointer;
+  padding: 3px;
+  width: 250px;
+  font-size: 16px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  color:rgb(219, 219, 219);
+  text-align: center;
+}
+
+#add-todo-btn:hover {
+  filter: brightness(110%);
+}
+
 .todo-list-container {
   background-color: gray;
+}
+
+.todo-list-container h2 {
+  margin: 0px;
+  padding: 0px;
+}
+
+.todo-list-container p {
+  margin: 10px 0px 15px 0px;
+  padding: px;
+}
+
+#todo-list-table {
+  display: grid;
+  grid-template-columns: 250px 80px 110px;
+}
+
+.table-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px;
+  border-bottom: 2px solid black;
+  border-right: 2px solid black;
+  border-top: 2px solid black;
+  height: 28px;
 }
 
 .todo-list {
   padding: 5px;
   list-style: none;
+  border: 2px solid black;
+  border-top: none;
 }
 
 .todo-list input[type="checkbox"]{
@@ -111,6 +178,46 @@ body {
 
 .todo-item {
   cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-left: 2px solid black;
+}
+
+.todo-title {
+  font-size: 20px;
+}
+
+.completed-title {
+  text-decoration: line-through;
+}
+
+.todo-cell {
+  height: 30px;
+  border-bottom: 2px solid black;
+  border-right: 2px solid black;
+}
+
+.center-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.column1 {
+  border-left: 2px solid black;
+}
+
+.high-priority {
+  background-color: red;
+}
+
+.medium-priority {
+  background-color: yellow;
+}
+
+.low-priority {
+  background-color: green;
 }
 
 #footer {
@@ -120,6 +227,10 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+#footer a {
+  color: #1e538f;
 }
 
 
@@ -152,4 +263,8 @@ body {
 
 .form button {
   padding: 3px;
+}
+
+.slider {
+  width: 100%;
 }
