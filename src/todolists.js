@@ -51,6 +51,11 @@ class List {
     this.dataKey = null;
   }
 
+  deleteTodo(dataKey) {
+    let index = this.todoList.findIndex((todo) => todo.dataKey == dataKey)
+    this.todoList.splice(index, 1)
+  }
+
   checkCompletion(){
     this.complete =  this.todoList.every((todo) => todo.complete);
   }

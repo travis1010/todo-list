@@ -10,7 +10,23 @@ function hideNewListForm() {
 }
 
 function displayTodoForm() {
+  document.getElementById('todo-form-date').value = format(new Date(), 'yyyy-MM-dd');
   document.getElementById('todo-form-container').style.display = 'flex';
+}
+
+function displayEditTodoForm(todo) {
+  document.getElementById('edit-title-input').value = todo.title;
+  document.getElementById('edit-description-input').value = todo.description;
+  console.log(todo.dueDate);
+  document.getElementById('edit-date-input').value = format(todo.dueDate, 'yyyy-MM-dd');
+  let slider = document.getElementById('edit-prio-slider');
+  slider.value = todo.prioToNum;
+  updateEditPrio(slider);
+  document.getElementById('edit-todo-form-container').style.display = 'flex';
+}
+
+function hideEditTodoForm() {
+  document.getElementById('edit-todo-form-container').style.display = 'none';
 }
 
 function hideTodoForm() {
@@ -34,6 +50,11 @@ function displayLists(lists) {
 function setFormDataKey(dataKey) {
   const todoForm = document.getElementById('todo-form');
   todoForm.setAttribute('data-key', dataKey);
+}
+
+function setEditFormDataKey(dataKey) {
+  const editTodoForm = document.getElementById('edit-todo-form');
+  editTodoForm.setAttribute('data-key', dataKey);
 }
 
 function createListItem(list){
@@ -178,6 +199,15 @@ function createTodoItem(todo) {
   editIcon.classList.add('fas');
   editIcon.classList.add('fa-edit');
   editBtn.appendChild(editIcon);
+  editBtn.setAttribute('onclick', `editTodo(${todo.dataKey})`);
+
+  const deleteBtn = document.createElement('button');
+  deleteBtn.classList.add('delete-btn');
+  const deleteIcon = document.createElement('i');
+  deleteIcon.classList.add('fas');
+  deleteIcon.classList.add('fa-trash');
+  deleteBtn.appendChild(deleteIcon);
+  deleteBtn.setAttribute('onclick', `deleteTodo(${todo.dataKey})`);
   
   checkBox.setAttribute('onclick', `clickCheckbox(${todo.dataKey})`)
 
@@ -198,12 +228,16 @@ function createTodoItem(todo) {
       priorityFlag.textContent = 'High';
       break;
   }
-
+  
+  title.setAttribute('onclick', `clickTodo(${todo.dataKey})`)
 
   leftSide.appendChild(checkBox);
   leftSide.appendChild(title);
   rightSide.appendChild(editBtn);
+  rightSide.appendChild(deleteBtn);
 
+  leftSide.classList.add('left-side-todo-cell');
+  
 
   const date = document.createElement('div');
   date.textContent = format(todo.dueDate, 'MM/dd/yyyy');
@@ -224,7 +258,7 @@ function createTodoItem(todo) {
   todoCell.appendChild(leftSide);
   todoCell.appendChild(rightSide);
   
-
+  
 
   return {column1: todoCell, column2: priorityFlag, column3: date, column4: description};
 }
@@ -252,4 +286,4 @@ function clearTodoArea() {
 }
 
 export {displayNewListForm, hideNewListForm, displayLists, clearListForm, displayTodoList, displayTodoForm, hideTodoForm, setFormDataKey, clearTodoArea,
-clearTodoForm,};
+clearTodoForm, displayEditTodoForm, hideEditTodoForm, setEditFormDataKey,};

@@ -56,7 +56,6 @@ window.sortByPrio = function(listDataKey) {
 }
 
 window.sortByDate = function(listDataKey) {
-  console.log('sort by date')
   lists.currentList = lists.getList(listDataKey);
   lists.currentList.sortByDate();
   UI.displayTodoList(lists.currentList);
@@ -76,12 +75,14 @@ window.cancelNewList = function() {
 }
 
 window.clickCheckbox = function(todoDataKey) {
-  console.log('todo data key:');
-  console.log(todoDataKey);
   const currentTodo = lists.getTodo(todoDataKey);
   currentTodo.toggleComplete();
   UI.displayTodoList(lists.currentList);
   UI.displayLists(lists);
+}
+
+window.clickTodo = function(todoDataKey) {
+  clickCheckbox(todoDataKey);
 }
 
 window.deleteList = function(e, dataKey) {
@@ -111,6 +112,18 @@ window.submitTodoForm = function(e, form) {
   UI.hideTodoForm();
   UI.displayTodoList(currentList);
   UI.clearTodoForm();
+  UI.displayLists(lists);
+}
+
+window.submitEditTodoForm = function(e, form) {
+  e.preventDefault();
+  const currentTodo = lists.getTodo(form.getAttribute('data-key'));
+  currentTodo.title = form.title.value;
+  currentTodo.description = form.description.value;
+  currentTodo.dueDate = parseISO(form['due-date'].value);
+  currentTodo.priority = parsePriority(form.priority.value);
+  UI.hideEditTodoForm();
+  UI.displayTodoList(lists.currentList);
 }
 
 window.createNewTodo = function(dataKey) {
@@ -122,20 +135,36 @@ window.cancelNewTodo = function() {
   UI.hideTodoForm();
 }
 
+window.cancelEditTodo = function() {
+  UI.hideEditTodoForm();
+}
+
 window.updatePrio = function (slider) {
   document.getElementById('prio-label').textContent = `Priority: ${parsePriority(slider.value)}`;
 }
 
-window.clickTodo = function (dataKey) {
-  console.log(lists.getTodo(dataKey).priority);
+window.editTodo = function (dataKey) {
+  UI.setEditFormDataKey(dataKey);
+  UI.displayEditTodoForm(lists.getTodo(dataKey));
+}
+
+window.deleteTodo = function (dataKey) {
+  lists.currentList.deleteTodo(dataKey);
+  UI.displayTodoList(lists.currentList);
+  UI.displayLists(lists);
+}
+
+window.updateEditPrio = function (slider) {
+  document.getElementById('edit-prio-label').textContent = `Priority: ${parsePriority(slider.value)}`;
 }
 
 
 
-let item1 = new Todo('Wash Car', 'dont forget to wax', addDays(new Date(), 1), '1')
-let item2 = new Todo('Make dinner', 'Lasagna', addDays(new Date(), 3), '2')
+
+let item1 = new Todo('Wash Car', 'Don\'t forget to wax!', addDays(new Date(), 1), '1')
+let item2 = new Todo('Get oil changed', '', addDays(new Date(), 3), '2')
 let item3 = new Todo('Mow the lawn', '', new Date(), '3')
-let item4 = new Todo('Work Out', 'leg day', addDays(new Date(), 2), '1')
+let item4 = new Todo('Work Out', 'Cardio', addDays(new Date(), 2), '1')
 
 let defaultList = new List('Default List', 'This is where the description goes...');
 defaultList.addTodo(item1);
@@ -149,5 +178,10 @@ item4.toggleComplete();
 
 defaultList.checkCompletion();
 
+
+
 lists.addList(defaultList);
 UI.displayLists(lists);
+
+
+
