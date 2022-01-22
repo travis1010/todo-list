@@ -1,4 +1,4 @@
-import { compareAsc, format, parse } from 'date-fns';
+import { parseISO, addDays } from 'date-fns';
 import {Todo, List, parsePriority} from './todolists.js';
 import * as UI from './ui.js';
 
@@ -49,6 +49,19 @@ export const lists = (() => {
   }
 })();
 
+window.sortByPrio = function(listDataKey) {
+  lists.currentList = lists.getList(listDataKey);
+  lists.currentList.sortByPrio();
+  UI.displayTodoList(lists.currentList);
+}
+
+window.sortByDate = function(listDataKey) {
+  console.log('sort by date')
+  lists.currentList = lists.getList(listDataKey);
+  lists.currentList.sortByDate();
+  UI.displayTodoList(lists.currentList);
+}
+
 window.showTodoList = function(dataKey) {
   lists.currentList = lists.getList(dataKey);
   UI.displayTodoList(lists.currentList)
@@ -94,7 +107,7 @@ window.submitListForm = function(e, form) {
 window.submitTodoForm = function(e, form) {
   e.preventDefault();
   const currentList = lists.getList(form.getAttribute('data-key'));
-  currentList.addTodo(new Todo(form.title.value, form.description.value, form['due-date'].value, form.priority.value));
+  currentList.addTodo(new Todo(form.title.value, form.description.value, parseISO(form['due-date'].value), form.priority.value));
   UI.hideTodoForm();
   UI.displayTodoList(currentList);
   UI.clearTodoForm();
@@ -119,10 +132,10 @@ window.clickTodo = function (dataKey) {
 
 
 
-let item1 = new Todo('Wash Car', 'dont forget to wax', '01/01/1999', '1')
-let item2 = new Todo('Make dinner', 'Lasagna', '01/01/1999', '2')
-let item3 = new Todo('Mow the lawn', '', '01/01/1999', '3')
-let item4 = new Todo('Work Out', 'leg day', '01/01/1999', '1')
+let item1 = new Todo('Wash Car', 'dont forget to wax', addDays(new Date(), 1), '1')
+let item2 = new Todo('Make dinner', 'Lasagna', addDays(new Date(), 3), '2')
+let item3 = new Todo('Mow the lawn', '', new Date(), '3')
+let item4 = new Todo('Work Out', 'leg day', addDays(new Date(), 2), '1')
 
 let defaultList = new List('Default List', 'This is where the description goes...');
 defaultList.addTodo(item1);

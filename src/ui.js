@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import { lists } from ".";
 
 function displayNewListForm() {
@@ -55,6 +56,7 @@ function createListItem(list){
 
   rightSideOfItem.appendChild(amountCompleted);
   rightSideOfItem.appendChild(deleteButton);
+  rightSideOfItem.classList.add('list-item-right-side');
 
   newList.appendChild(listName);
   newList.appendChild(rightSideOfItem);
@@ -80,16 +82,20 @@ function displayTodoList(list) {
   const column1 = document.createElement('div');
   const column2 = document.createElement('div');
   const column3 = document.createElement('div');
+  const column4 = document.createElement('div');
 
   const todoListTable = document.createElement('div');
   todoListTable.id = 'todo-list-table';
 
+  const buttons = document.createElement('span');
+
   const addItem = document.createElement('button');
   addItem.id = 'add-todo-btn';
   addItem.textContent = 'Add Todo';
-  addItem.setAttribute('onclick', `createNewTodo(${list.dataKey})`)
+  addItem.setAttribute('onclick', `createNewTodo(${list.dataKey})`);
 
-  
+  buttons.appendChild(addItem);
+
   const todoLabel = document.createElement('div');
   todoLabel.textContent = 'Todo';
   todoLabel.classList.add('table-label');
@@ -99,20 +105,32 @@ function displayTodoList(list) {
   const prioLabel = document.createElement('div');
   prioLabel.textContent = 'Priority';
   prioLabel.classList.add('table-label');
+  prioLabel.classList.add('sort-btn');
+  prioLabel.setAttribute('onclick', `sortByPrio(${list.dataKey})`);
+  
 
   column2.appendChild(prioLabel);
 
   const dateLabel = document.createElement('div');
   dateLabel.textContent = 'Due Date';
   dateLabel.classList.add('table-label');
+  dateLabel.classList.add('sort-btn');
+  dateLabel.setAttribute('onclick', `sortByDate(${list.dataKey})`);
 
   column3.appendChild(dateLabel);
+
+  const descriptionLabel = document.createElement('div');
+  descriptionLabel.textContent = 'Description';
+  descriptionLabel.classList.add('table-label');
+
+  column4.appendChild(descriptionLabel);
 
   list.todoList.forEach((todo) => {
     const newTodo = createTodoItem(todo);
     column1.appendChild(newTodo.column1);
     column2.appendChild(newTodo.column2);
     column3.appendChild(newTodo.column3);
+    column4.appendChild(newTodo.column4);
   })
 
   column1.classList.add('column1');
@@ -120,10 +138,11 @@ function displayTodoList(list) {
   todoListTable.appendChild(column1);
   todoListTable.appendChild(column2);
   todoListTable.appendChild(column3);
+  todoListTable.appendChild(column4);
 
   todoListContainer.appendChild(header);
   todoListContainer.appendChild(description);
-  todoListContainer.appendChild(addItem);
+  todoListContainer.appendChild(buttons);
   todoListContainer.appendChild(todoListTable);
   
 
@@ -135,8 +154,12 @@ function displayTodoList(list) {
 function createTodoItem(todo) {
   const newTodo = document.createElement('li');
   newTodo.setAttribute('data-key', todo.dataKey);
-  const leftSide = document.createElement('div');
 
+  const todoCell = document.createElement('div');
+
+  const leftSide = document.createElement('div');
+  const rightSide = document.createElement('div');
+  
   const checkBox = document.createElement('input');
   checkBox.type = 'checkbox';
 
@@ -148,10 +171,15 @@ function createTodoItem(todo) {
     checkBox.checked = true;
     title.classList.add('completed-title');
   }
+
+  const editBtn = document.createElement('button');
+  editBtn.classList.add('edit-btn');
+  const editIcon = document.createElement('i');
+  editIcon.classList.add('fas');
+  editIcon.classList.add('fa-edit');
+  editBtn.appendChild(editIcon);
   
   checkBox.setAttribute('onclick', `clickCheckbox(${todo.dataKey})`)
-
-  
 
   const priorityFlag = document.createElement('div');
   priorityFlag.classList.add('prio-flag');
@@ -171,23 +199,34 @@ function createTodoItem(todo) {
       break;
   }
 
-  
 
   leftSide.appendChild(checkBox);
   leftSide.appendChild(title);
+  rightSide.appendChild(editBtn);
+
 
   const date = document.createElement('div');
-  date.textContent = todo.dueDate;
+  date.textContent = format(todo.dueDate, 'MM/dd/yyyy');
 
-  leftSide.classList.add('todo-cell');
+  const description = document.createElement('div');
+  description.textContent = todo.description;
+
+  todoCell.classList.add('todo-cell');
   priorityFlag.classList.add('todo-cell');
   date.classList.add('todo-cell');
+  description.classList.add('todo-cell')
   
+  todoCell.classList.add('main-todo-cell');
   priorityFlag.classList.add('center-cell');
   date.classList.add('center-cell');
+  description.classList.add('left-align-cell')
+
+  todoCell.appendChild(leftSide);
+  todoCell.appendChild(rightSide);
+  
 
 
-  return {column1: leftSide, column2: priorityFlag, column3: date};
+  return {column1: todoCell, column2: priorityFlag, column3: date, column4: description};
 }
 
 function clearListForm() {
@@ -201,7 +240,8 @@ function clearTodoForm() {
   todoForm.title.value = '';
   todoForm.description.value = '';
   todoForm['due-date'].value = '';
-  todoForm.priority.value = '';
+  todoForm.priority.value = "2";
+  document.getElementById('prio-label').textContent = `Priority: Medium`;
 }
 
 function clearTodoArea() {

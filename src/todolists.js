@@ -1,4 +1,4 @@
-import { compareAsc, format } from 'date-fns';
+import { compareAsc } from 'date-fns';
 
 let todoCount = 0;
 
@@ -18,6 +18,10 @@ class Todo {
     this.complete = !this.complete;
   }
 
+  get prioToNum() {
+    const key = { 'Low': 1, 'Medium': 2, 'High': 3 };
+    return key[this.priority];
+  }
   
 }
 
@@ -71,6 +75,14 @@ class List {
       }
     });
     return count;
+  }
+
+  sortByPrio() {
+    this.todoList.sort((a, b) => b.prioToNum - a.prioToNum)
+  }
+
+  sortByDate() {
+    this.todoList.sort((a, b) => compareAsc(a.dueDate, b.dueDate));
   }
 }
 
