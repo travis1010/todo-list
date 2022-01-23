@@ -38,6 +38,18 @@
     </form>
   </div>
 
+  <div id="edit-list-form-container" class='form-container'>
+    <form id="edit-list-form" class='form' onsubmit="submitEditListForm(event, this)">
+      <h3>Edit Todo List</h3>
+      <label for='title'>Title:</label>
+      <input type='text' name='title' placeholder="Enter Title" id='edit-list-title' required>
+      <label for='description'>Description:</label>
+      <input type='text' name='description' placeholder="Enter Description" id='edit-list-description'>
+      <button type='submit' name='submit'>Submit</button>
+      <button type='button' onclick='cancelEditList()'>Cancel</button>
+    </form>
+  </div>
+
   <div id="todo-form-container" class='form-container'>
     <form id="todo-form" class='form' onsubmit="submitTodoForm(event, this)">
       <h3>Create New Todo</h3>

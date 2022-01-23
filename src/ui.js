@@ -25,6 +25,16 @@ function displayEditTodoForm(todo) {
   document.getElementById('edit-todo-form-container').style.display = 'flex';
 }
 
+function displayEditListForm(list) {
+  document.getElementById('edit-list-title').value = list.title;
+  document.getElementById('edit-list-description').value = list.description;
+  document.getElementById('edit-list-form-container').style.display = 'flex';
+}
+
+function hideEditListForm() {
+  document.getElementById('edit-list-form-container').style.display = 'none';
+}
+
 function hideEditTodoForm() {
   document.getElementById('edit-todo-form-container').style.display = 'none';
 }
@@ -57,6 +67,11 @@ function setEditFormDataKey(dataKey) {
   editTodoForm.setAttribute('data-key', dataKey);
 }
 
+function setEditListFormDataKey(dataKey) {
+  const editListForm = document.getElementById('edit-list-form');
+  editListForm.setAttribute('data-key', dataKey);
+}
+
 function createListItem(list){
   const newList = document.createElement('li');
   const listName = document.createElement('div');
@@ -75,7 +90,16 @@ function createListItem(list){
   trashIcon.classList.add('fa-trash');
   deleteButton.appendChild(trashIcon);
 
+  const editBtn = document.createElement('button');
+  editBtn.classList.add('edit-btn');
+  const editIcon = document.createElement('i');
+  editIcon.classList.add('fas');
+  editIcon.classList.add('fa-edit');
+  editBtn.appendChild(editIcon);
+  editBtn.setAttribute('onclick', `editList(${list.dataKey})`);
+
   rightSideOfItem.appendChild(amountCompleted);
+  rightSideOfItem.appendChild(editBtn);
   rightSideOfItem.appendChild(deleteButton);
   rightSideOfItem.classList.add('list-item-right-side');
 
@@ -97,6 +121,19 @@ function displayTodoList(list) {
 
   const header = document.createElement('h2');
   header.textContent = list.title;
+
+  const detailsBtn = document.createElement('button');
+  detailsBtn.classList.add('details-btn');
+  const detailsIcon = document.createElement('i');
+  detailsIcon.classList.add('fas');
+  if (list.detailedView) {
+    detailsIcon.classList.add('fa-angle-double-left')
+  } else {
+    detailsIcon.classList.add('fa-angle-double-right')
+  }
+  detailsBtn.appendChild(detailsIcon);
+  detailsBtn.setAttribute('onclick', `toggleDetails(${list.dataKey})`)
+  
   const description = document.createElement('p');
   description.textContent = list.description;
 
@@ -109,6 +146,7 @@ function displayTodoList(list) {
   todoListTable.id = 'todo-list-table';
 
   const buttons = document.createElement('span');
+ 
 
   const addItem = document.createElement('button');
   addItem.id = 'add-todo-btn';
@@ -116,10 +154,13 @@ function displayTodoList(list) {
   addItem.setAttribute('onclick', `createNewTodo(${list.dataKey})`);
 
   buttons.appendChild(addItem);
+  
 
   const todoLabel = document.createElement('div');
   todoLabel.textContent = 'Todo';
   todoLabel.classList.add('table-label');
+  todoLabel.classList.add('todo-label');
+  todoLabel.appendChild(detailsBtn);
 
   column1.appendChild(todoLabel);
   
@@ -157,9 +198,12 @@ function displayTodoList(list) {
   column1.classList.add('column1');
 
   todoListTable.appendChild(column1);
-  todoListTable.appendChild(column2);
-  todoListTable.appendChild(column3);
-  todoListTable.appendChild(column4);
+
+  if (list.detailedView) {
+    todoListTable.appendChild(column2);
+    todoListTable.appendChild(column3);
+    todoListTable.appendChild(column4);
+  }
 
   todoListContainer.appendChild(header);
   todoListContainer.appendChild(description);
@@ -286,4 +330,4 @@ function clearTodoArea() {
 }
 
 export {displayNewListForm, hideNewListForm, displayLists, clearListForm, displayTodoList, displayTodoForm, hideTodoForm, setFormDataKey, clearTodoArea,
-clearTodoForm, displayEditTodoForm, hideEditTodoForm, setEditFormDataKey,};
+clearTodoForm, displayEditTodoForm, hideEditTodoForm, setEditFormDataKey, displayEditListForm, hideEditListForm, setEditListFormDataKey,};

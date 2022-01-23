@@ -49,6 +49,7 @@ class List {
     this.complete = false;
     this.todoList = [];
     this.dataKey = null;
+    this.detailedView = false;
   }
 
   deleteTodo(dataKey) {

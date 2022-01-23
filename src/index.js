@@ -52,13 +52,13 @@ export const lists = (() => {
 window.sortByPrio = function(listDataKey) {
   lists.currentList = lists.getList(listDataKey);
   lists.currentList.sortByPrio();
-  UI.displayTodoList(lists.currentList);
+  UI.displayTodoList(lists.currentList, true);
 }
 
 window.sortByDate = function(listDataKey) {
   lists.currentList = lists.getList(listDataKey);
   lists.currentList.sortByDate();
-  UI.displayTodoList(lists.currentList);
+  UI.displayTodoList(lists.currentList, true);
 }
 
 window.showTodoList = function(dataKey) {
@@ -105,6 +105,17 @@ window.submitListForm = function(e, form) {
   UI.displayTodoList(lists.arr[lists.arr.length-1]);
 }
 
+window.submitEditListForm = function(e, form) {
+  e.preventDefault();
+  const currentList = lists.getList(form.getAttribute('data-key'));
+  currentList.title = form.title.value;
+  currentList.description = form.description.value;
+  UI.hideEditListForm();
+  UI.displayTodoList(currentList);
+  UI.clearListForm();
+  UI.displayLists(lists);
+}
+
 window.submitTodoForm = function(e, form) {
   e.preventDefault();
   const currentList = lists.getList(form.getAttribute('data-key'));
@@ -148,6 +159,15 @@ window.editTodo = function (dataKey) {
   UI.displayEditTodoForm(lists.getTodo(dataKey));
 }
 
+window.editList = function (dataKey) {
+  UI.setEditListFormDataKey(dataKey);
+  UI.displayEditListForm(lists.getList(dataKey));
+}
+
+window.cancelEditList = function () {
+  UI.hideEditListForm();
+}
+
 window.deleteTodo = function (dataKey) {
   lists.currentList.deleteTodo(dataKey);
   UI.displayTodoList(lists.currentList);
@@ -159,6 +179,11 @@ window.updateEditPrio = function (slider) {
 }
 
 
+window.toggleDetails = function (listDataKey) {
+  const list = lists.getList(listDataKey)
+  list.detailedView = !list.detailedView;
+  UI.displayTodoList(list);
+}
 
 
 let item1 = new Todo('Wash Car', 'Don\'t forget to wax!', addDays(new Date(), 1), '1')
@@ -166,7 +191,7 @@ let item2 = new Todo('Get oil changed', '', addDays(new Date(), 3), '2')
 let item3 = new Todo('Mow the lawn', '', new Date(), '3')
 let item4 = new Todo('Work Out', 'Cardio', addDays(new Date(), 2), '1')
 
-let defaultList = new List('Default List', 'This is where the description goes...');
+let defaultList = new List('Default List', 'This is where the description goes...blah blah blah blah blah blah lasjdf ;lkasjdf hjkhkljsgdf owiuyerpo mcncxv oweiur.');
 defaultList.addTodo(item1);
 defaultList.addTodo(item2);
 defaultList.addTodo(item3);
