@@ -101,7 +101,7 @@ body {
 
 
 
-.delete-btn:hover, .edit-btn:hover {
+.delete-btn:hover, .edit-btn:hover, .details-btn:hover {
   color: rgb(219, 219, 219);
 }
 
@@ -122,13 +122,28 @@ body {
   color:rgb(219, 219, 219);
 }
 
+#todo-area h2 {
+  font-size: 28px;
+}
+
+.details-btn {
+  border: none;
+  cursor: pointer;
+  padding: 3px;
+  font-size: 16px;
+  margin: 0px;
+  background-color: #58ADAD;
+  color: black;
+}
+
+
 #add-todo-btn {
   border: 2px solid black;
   border-bottom: none;
   background-color: #1e538f;
   cursor: pointer;
   padding: 3px;
-  width: 250px;
+  width: 125px;
   font-size: 16px;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
@@ -140,10 +155,7 @@ body {
   filter: brightness(115%);
 }
 
-.sort-btn {
-  cursor: pointer;
-  background-color: #5E8686
-}
+
 
 .todo-list-container h2 {
   margin-top: 10px;
@@ -152,13 +164,15 @@ body {
 
 .todo-list-container p {
   margin: 10px 0px 15px 0px;
-  padding: px;
+  padding: 0px;
+  width: 250px;
+  text-align: justify;
+  text-justify: inter-word;
 }
 
 #todo-list-table {
   display: grid;
   grid-template-columns: 250px 80px 110px 400px;
-  background-color: #5E8686;
 }
 
 .table-label {
@@ -170,6 +184,13 @@ body {
   border-right: 2px solid black;
   border-top: 2px solid black;
   height: 28px;
+  background-color: #58ADAD
+}
+
+.todo-label {
+  display: flex;
+  justify-content: space-between;
+  padding: 0px 0px 0px 22px;
 }
 
 .todo-list {
@@ -194,15 +215,22 @@ body {
   justify-content: space-between;
   align-items: center;
   border-left: 2px solid black;
+  font-size: 16px;
 }
 
 .todo-title {
-  font-size: 20px;
+  font-size: 18px;
+  color: black;
+}
+
+.todo-title:hover {
+  text-decoration: line-through;
 }
 
 .completed-title {
   text-decoration: line-through;
 }
+
 
 .left-align-cell {
   display: flex;
@@ -216,6 +244,7 @@ body {
   height: 30px;
   border-bottom: 2px solid black;
   border-right: 2px solid black;
+  background-color: #58ADAD
 }
 
 .main-todo-cell {
@@ -242,7 +271,6 @@ body {
 
 .column1 {
   border-left: 2px solid black;
-  background-color: #58adad;
 }
 
 .high-priority {
@@ -270,6 +298,11 @@ body {
   color: #c4c4c4;
 }
 
+.sort-btn {
+  cursor: pointer;
+  color:rgb(219, 219, 219);
+  background-color: #1e538f;
+}
 
 /* forms css */
 
@@ -287,7 +320,9 @@ body {
   display: flex;
   flex-direction: column;
   background-color: gray;
-  padding: 5px;
+  padding: 8px;
+  border-radius: 8px;
+  border: 2px solid black;
 }
 
 .form label {
@@ -300,6 +335,16 @@ body {
 
 .form button {
   padding: 3px;
+  background-color: #1e538f;
+  color:rgb(219, 219, 219);
+  border: 2px solid black;
+  margin-bottom: 3px;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.form button:hover {
+  filter:brightness(115%);
 }
 
 .slider {
