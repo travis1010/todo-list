@@ -63,6 +63,14 @@ body {
   list-style: none;
 }
 
+#list-list {
+  margin-bottom: 20px;
+}
+
+#date-lists {
+  border-top: 2px solid black;
+}
+
 .list-item {
   display: flex;
   justify-content: space-between;
@@ -91,14 +99,12 @@ body {
   margin-left: 3px;
 }
 
-
 .edit-btn, .delete-btn {
   border: none;
   background-color: rgba(0, 0, 0, 0.0);
   cursor: pointer;
   padding: 3px;
 }
-
 
 
 .delete-btn:hover, .edit-btn:hover, .details-btn:hover {
@@ -184,13 +190,14 @@ body {
   border-right: 2px solid black;
   border-top: 2px solid black;
   height: 28px;
-  background-color: #58ADAD
+  background-color: #58ADAD;
+  font-size: 16px;
 }
 
 .todo-label {
   display: flex;
   justify-content: space-between;
-  padding: 0px 0px 0px 22px;
+  padding: 0px 0px 0px 100px;
 }
 
 .todo-list {
@@ -244,7 +251,7 @@ body {
   height: 30px;
   border-bottom: 2px solid black;
   border-right: 2px solid black;
-  background-color: #58ADAD
+  background-color: #58ADAD;
 }
 
 .main-todo-cell {

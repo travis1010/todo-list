@@ -1,4 +1,4 @@
-import { parseISO, addDays } from 'date-fns';
+import { parseISO, addDays, format } from 'date-fns';
 import {Todo, List, parsePriority} from './todolists.js';
 import * as UI from './ui.js';
 
@@ -38,6 +38,24 @@ export const lists = (() => {
     })
     return currentTodo;
   }
+
+  const getTodaysTodos = () => {
+    const today = new List('Today', '');
+    today.dataKey = 'today';
+    arr.forEach((list) => {
+      list.todoList.forEach((todo) => {
+        if (format(todo.dueDate, 'MM/dd/yyyy') == format(new Date(), 'MM/dd/yyyy')) {
+          today.addTodo(todo);
+        }
+      })
+    });
+    return today;
+  }
+
+  const getWeeksTodos = () => {
+
+  }
+
   return {
     arr,
     addList,
@@ -46,6 +64,8 @@ export const lists = (() => {
     deleteList,
     lastDisplayedList,
     currentList,
+    getTodaysTodos,
+    getWeeksTodos,
   }
 })();
 
@@ -62,7 +82,11 @@ window.sortByDate = function(listDataKey) {
 }
 
 window.showTodoList = function(dataKey) {
-  lists.currentList = lists.getList(dataKey);
+  if (dataKey == 'today') {
+    lists.currentList = lists.getTodaysTodos();
+  } else {
+    lists.currentList = lists.getList(dataKey);
+  }
   UI.displayTodoList(lists.currentList)
 }
 
@@ -169,7 +193,10 @@ window.cancelEditList = function () {
 }
 
 window.deleteTodo = function (dataKey) {
-  lists.currentList.deleteTodo(dataKey);
+  lists.getList(lists.getTodo(dataKey).listDataKey).deleteTodo(dataKey);
+  if(lists.currentList.dataKey == 'today') {
+    lists.currentList = lists.getTodaysTodos();
+  }
   UI.displayTodoList(lists.currentList);
   UI.displayLists(lists);
 }
@@ -179,24 +206,34 @@ window.updateEditPrio = function (slider) {
 }
 
 
-window.toggleDetails = function (listDataKey) {
-  const list = lists.getList(listDataKey)
-  list.detailedView = !list.detailedView;
+window.toggleDetails = function (listDataKey, currentView) {
+  let list = null;
+  if (listDataKey == 'today') {
+    list = lists.getTodaysTodos();
+  } else {
+    list = lists.getList(listDataKey)
+  }
+  list.detailedView = !(currentView === 'true');
   UI.displayTodoList(list);
 }
 
 
-let item1 = new Todo('Wash Car', 'Don\'t forget to wax!', addDays(new Date(), 1), '1')
+let item1 = new Todo('Wash Car', 'Don\'t forget to wax!', new Date(), '1')
 let item2 = new Todo('Get oil changed', '', addDays(new Date(), 3), '2')
 let item3 = new Todo('Mow the lawn', '', new Date(), '3')
 let item4 = new Todo('Work Out', 'Cardio', addDays(new Date(), 2), '1')
 
 let defaultList = new List('Default List', 'This is where the description goes...blah blah blah blah blah blah lasjdf ;lkasjdf hjkhkljsgdf owiuyerpo mcncxv oweiur.');
+lists.addList(defaultList);
+
+console.log(defaultList);
+
 defaultList.addTodo(item1);
 defaultList.addTodo(item2);
 defaultList.addTodo(item3);
 defaultList.addTodo(item4);
 defaultList.checkCompletion();
+console.log(item1);
 
 item2.toggleComplete();
 item4.toggleComplete();
@@ -205,8 +242,7 @@ defaultList.checkCompletion();
 
 
 
-lists.addList(defaultList);
-UI.displayLists(lists);
 
+UI.displayLists(lists);
 
 

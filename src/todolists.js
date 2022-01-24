@@ -11,6 +11,7 @@ class Todo {
     this.priority = parsePriority(priority)
     this.complete = false;
     this.dataKey = todoCount;
+    this.listDataKey = null;
     todoCount++;
   }
 
@@ -62,6 +63,9 @@ class List {
   }
 
   addTodo(todo) {
+    if(todo.listDataKey == null) {
+      todo.listDataKey = this.dataKey;
+    }
     this.todoList.push(todo);
   }
 

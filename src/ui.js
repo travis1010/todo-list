@@ -17,7 +17,6 @@ function displayTodoForm() {
 function displayEditTodoForm(todo) {
   document.getElementById('edit-title-input').value = todo.title;
   document.getElementById('edit-description-input').value = todo.description;
-  console.log(todo.dueDate);
   document.getElementById('edit-date-input').value = format(todo.dueDate, 'yyyy-MM-dd');
   let slider = document.getElementById('edit-prio-slider');
   slider.value = todo.prioToNum;
@@ -50,10 +49,19 @@ function displayLists(lists) {
     listList.removeChild(listList.firstChild);
   }
 
+
   lists.arr.forEach((list) => {
     const newList = createListItem(list);
     listList.appendChild(newList);
   })
+
+  const dateLists = document.getElementById('date-lists');
+
+  while (dateLists.firstChild) {
+    dateLists.removeChild(dateLists.firstChild);
+  }
+
+  dateLists.appendChild(createTodayListItem());
   
 }
 
@@ -70,6 +78,26 @@ function setEditFormDataKey(dataKey) {
 function setEditListFormDataKey(dataKey) {
   const editListForm = document.getElementById('edit-list-form');
   editListForm.setAttribute('data-key', dataKey);
+}
+
+function createTodayListItem() {
+  const list = lists.getTodaysTodos();
+  const newList = document.createElement('li');
+  const listName = document.createElement('div');
+  listName.textContent = list.title;
+  listName.classList.add('list-name');
+  const rightSideOfItem = document.createElement('div');
+  const amountCompleted = document.createElement('span');
+  amountCompleted.textContent = `${list.numCompleted}/${list.length}`
+
+  rightSideOfItem.appendChild(amountCompleted);
+  rightSideOfItem.classList.add('list-item-right-side');
+
+  newList.appendChild(listName);
+  newList.appendChild(rightSideOfItem);
+  newList.classList.add('list-item');
+  newList.setAttribute('onclick', `showTodoList('today')`);
+  return newList;
 }
 
 function createListItem(list){
@@ -132,7 +160,7 @@ function displayTodoList(list) {
     detailsIcon.classList.add('fa-angle-double-right')
   }
   detailsBtn.appendChild(detailsIcon);
-  detailsBtn.setAttribute('onclick', `toggleDetails(${list.dataKey})`)
+  detailsBtn.setAttribute('onclick', `toggleDetails('${list.dataKey}', '${list.detailedView}')`)
   
   const description = document.createElement('p');
   description.textContent = list.description;
@@ -207,7 +235,9 @@ function displayTodoList(list) {
 
   todoListContainer.appendChild(header);
   todoListContainer.appendChild(description);
-  todoListContainer.appendChild(buttons);
+  if (list.dataKey != 'today') {
+    todoListContainer.appendChild(buttons);
+  }
   todoListContainer.appendChild(todoListTable);
   
 
