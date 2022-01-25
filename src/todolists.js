@@ -44,13 +44,13 @@ function parsePriority(num) {
 
 
 class List {
-  constructor(title, description) {
+  constructor(title, description, detailedView = false) {
     this.title = title;
     this.description = description;
     this.complete = false;
     this.todoList = [];
     this.dataKey = null;
-    this.detailedView = false;
+    this.detailedView = detailedView;
   }
 
   deleteTodo(dataKey) {

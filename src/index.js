@@ -7,6 +7,7 @@ export const lists = (() => {
   let lastDisplayedList = null;
   const arr = []; 
   let currentList = null;
+  let todayList = null;
 
   const addList = (list) => {
     arr.push(list);
@@ -39,8 +40,10 @@ export const lists = (() => {
     return currentTodo;
   }
 
-  const getTodaysTodos = () => {
-    const today = new List('Today', '');
+  const getTodayList = () => {
+    let currentView = false;
+    if(lists.todayList) currentView = lists.todayList.detailedView;
+    const today = new List('Today', '', currentView);
     today.dataKey = 'today';
     arr.forEach((list) => {
       list.todoList.forEach((todo) => {
@@ -64,13 +67,19 @@ export const lists = (() => {
     deleteList,
     lastDisplayedList,
     currentList,
-    getTodaysTodos,
+    getTodayList,
+    todayList,
     getWeeksTodos,
   }
 })();
 
 window.sortByPrio = function(listDataKey) {
-  lists.currentList = lists.getList(listDataKey);
+  if (listDataKey == 'today') {
+    lists.currentList = lists.todayList;
+  } else {
+    lists.currentList = lists.getList(listDataKey);
+  }
+  
   lists.currentList.sortByPrio();
   UI.displayTodoList(lists.currentList, true);
 }
@@ -83,7 +92,8 @@ window.sortByDate = function(listDataKey) {
 
 window.showTodoList = function(dataKey) {
   if (dataKey == 'today') {
-    lists.currentList = lists.getTodaysTodos();
+    lists.todayList = lists.getTodayList();
+    lists.currentList = lists.todayList;
   } else {
     lists.currentList = lists.getList(dataKey);
   }
@@ -147,6 +157,7 @@ window.submitTodoForm = function(e, form) {
   UI.hideTodoForm();
   UI.displayTodoList(currentList);
   UI.clearTodoForm();
+  lists.todayList = lists.getTodayList();
   UI.displayLists(lists);
 }
 
@@ -158,7 +169,12 @@ window.submitEditTodoForm = function(e, form) {
   currentTodo.dueDate = parseISO(form['due-date'].value);
   currentTodo.priority = parsePriority(form.priority.value);
   UI.hideEditTodoForm();
+  lists.todayList = lists.getTodayList();
+  if(lists.currentList.dataKey == 'today') {
+    lists.currentList = lists.todayList;
+  }
   UI.displayTodoList(lists.currentList);
+  UI.displayLists(lists);
 }
 
 window.createNewTodo = function(dataKey) {
@@ -194,8 +210,9 @@ window.cancelEditList = function () {
 
 window.deleteTodo = function (dataKey) {
   lists.getList(lists.getTodo(dataKey).listDataKey).deleteTodo(dataKey);
+  lists.todayList = lists.getTodayList();
   if(lists.currentList.dataKey == 'today') {
-    lists.currentList = lists.getTodaysTodos();
+    lists.currentList = lists.todayList;
   }
   UI.displayTodoList(lists.currentList);
   UI.displayLists(lists);
@@ -209,7 +226,7 @@ window.updateEditPrio = function (slider) {
 window.toggleDetails = function (listDataKey, currentView) {
   let list = null;
   if (listDataKey == 'today') {
-    list = lists.getTodaysTodos();
+    list = lists.todayList;
   } else {
     list = lists.getList(listDataKey)
   }
@@ -223,7 +240,7 @@ let item2 = new Todo('Get oil changed', '', addDays(new Date(), 3), '2')
 let item3 = new Todo('Mow the lawn', '', new Date(), '3')
 let item4 = new Todo('Work Out', 'Cardio', addDays(new Date(), 2), '1')
 
-let defaultList = new List('Default List', 'This is where the description goes...blah blah blah blah blah blah lasjdf ;lkasjdf hjkhkljsgdf owiuyerpo mcncxv oweiur.');
+let defaultList = new List('Default List', 'Welcome to my Todo List app.  Click the >> arrows to show more details for your todo list.  Click the Priority button to sort by the highest priority.  Click the Due Date button to sort by date.  Click on a todo to cross it off the list.');
 lists.addList(defaultList);
 
 console.log(defaultList);
@@ -240,9 +257,9 @@ item4.toggleComplete();
 
 defaultList.checkCompletion();
 
-
-
+lists.todayList = lists.getTodayList();
 
 UI.displayLists(lists);
+UI.displayTodoList(defaultList);
 
 

@@ -81,7 +81,7 @@ function setEditListFormDataKey(dataKey) {
 }
 
 function createTodayListItem() {
-  const list = lists.getTodaysTodos();
+  const list = lists.todayList;
   const newList = document.createElement('li');
   const listName = document.createElement('div');
   listName.textContent = list.title;
@@ -196,7 +196,7 @@ function displayTodoList(list) {
   prioLabel.textContent = 'Priority';
   prioLabel.classList.add('table-label');
   prioLabel.classList.add('sort-btn');
-  prioLabel.setAttribute('onclick', `sortByPrio(${list.dataKey})`);
+  prioLabel.setAttribute('onclick', `sortByPrio('${list.dataKey}')`);
   
 
   column2.appendChild(prioLabel);
@@ -204,8 +204,13 @@ function displayTodoList(list) {
   const dateLabel = document.createElement('div');
   dateLabel.textContent = 'Due Date';
   dateLabel.classList.add('table-label');
-  dateLabel.classList.add('sort-btn');
-  dateLabel.setAttribute('onclick', `sortByDate(${list.dataKey})`);
+  
+  console.log('lists datakey:', list.dataKey);
+  if (list.dataKey != 'today') {
+    
+    dateLabel.classList.add('sort-btn');
+    dateLabel.setAttribute('onclick', `sortByDate(${list.dataKey})`);
+  }
 
   column3.appendChild(dateLabel);
 
