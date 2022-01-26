@@ -62,6 +62,7 @@ function displayLists(lists) {
   }
 
   dateLists.appendChild(createTodayListItem());
+  dateLists.appendChild(createWeekListItem());
   
 }
 
@@ -97,6 +98,26 @@ function createTodayListItem() {
   newList.appendChild(rightSideOfItem);
   newList.classList.add('list-item');
   newList.setAttribute('onclick', `showTodoList('today')`);
+  return newList;
+}
+
+function createWeekListItem() {
+  const list = lists.weekList;
+  const newList = document.createElement('li');
+  const listName = document.createElement('div');
+  listName.textContent = list.title;
+  listName.classList.add('list-name');
+  const rightSideOfItem = document.createElement('div');
+  const amountCompleted = document.createElement('span');
+  amountCompleted.textContent = `${list.numCompleted}/${list.length}`
+
+  rightSideOfItem.appendChild(amountCompleted);
+  rightSideOfItem.classList.add('list-item-right-side');
+
+  newList.appendChild(listName);
+  newList.appendChild(rightSideOfItem);
+  newList.classList.add('list-item');
+  newList.setAttribute('onclick', `showTodoList('week')`);
   return newList;
 }
 
@@ -205,11 +226,10 @@ function displayTodoList(list) {
   dateLabel.textContent = 'Due Date';
   dateLabel.classList.add('table-label');
   
-  console.log('lists datakey:', list.dataKey);
+  
   if (list.dataKey != 'today') {
-    
     dateLabel.classList.add('sort-btn');
-    dateLabel.setAttribute('onclick', `sortByDate(${list.dataKey})`);
+    dateLabel.setAttribute('onclick', `sortByDate('${list.dataKey}')`);
   }
 
   column3.appendChild(dateLabel);
@@ -240,7 +260,7 @@ function displayTodoList(list) {
 
   todoListContainer.appendChild(header);
   todoListContainer.appendChild(description);
-  if (list.dataKey != 'today') {
+  if (list.dataKey != 'today' && list.dataKey != 'week') {
     todoListContainer.appendChild(buttons);
   }
   todoListContainer.appendChild(todoListTable);

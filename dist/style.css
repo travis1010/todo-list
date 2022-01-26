@@ -96,7 +96,7 @@ body {
 }
 
 .list-item button {
-  margin-left: 3px;
+  margin: 0px;
 }
 
 .edit-btn, .delete-btn {
@@ -114,6 +114,10 @@ body {
 .list-item-right-side {
   display: flex;
   align-items: center;
+}
+
+.list-item-right-side span {
+  margin-right: 3px;
 }
 
 #todo-area {
@@ -226,7 +230,7 @@ body {
 }
 
 .todo-title {
-  font-size: 18px;
+  font-size: 16px;
   color: black;
 }
 
@@ -295,14 +299,14 @@ body {
 #footer {
   width: 100%;
   height: 50px;
-  background-color: #535353;
+  background-color: gray;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 #footer a {
-  color: #c4c4c4;
+  color: black;
 }
 
 .sort-btn {

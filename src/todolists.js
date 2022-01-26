@@ -63,7 +63,7 @@ class List {
   }
 
   addTodo(todo) {
-    if(todo.listDataKey == null) {
+    if(todo.listDataKey === null) {
       todo.listDataKey = this.dataKey;
     }
     this.todoList.push(todo);
