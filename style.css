@@ -18,13 +18,12 @@ body {
   background-color: gray;
   width: 100%;
   display: flex;
-  justify-content: flex;
+  justify-content: center;
   align-items: center;
 }
 
 #header h1 {
-  margin-left: 20px;
-  text-shadow: 2px 2px #535353;
+  text-shadow: 2px 2px 2px #535353;
   color: black;
   font-size: 32px;
 }
