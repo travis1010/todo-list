@@ -309,7 +309,7 @@ function loadDefaultTodos() {
   let item4 = new Todo('Work Out', 'Cardio', addDays(new Date(), 2), '1')
   let item5 = new Todo('Set Dentist Appt', 'Make a new appointment with Dr. Crentist.', addDays(new Date(), 22), '3')
   
-  let defaultList = new List('Default List', 'Welcome to my Todo List app.  Click the >> arrows to show more details for your todo list.  Click the Priority button to sort by the highest priority.  Click the Due Date button to sort by date.  Click on a todo to cross it off the list.');
+  let defaultList = new List('Default List', 'Welcome to my Todo List app.  Click the >> arrows to show more details for your todo list.  Click the Priority button to sort by the highest priority.  Click the Due Date button to sort by date.  Click on a todo to cross it off the list.  Delete all lists and refresh to bring back the default list.');
   lists.addList(defaultList);
   
   defaultList.addTodo(item1);
