@@ -123,17 +123,12 @@ body {
   height: 100%;
   flex-grow: 1;
   display: flex;
-  justify-content: flex-start;
-  margin-left: 20px;
+  justify-content: center;
   
 }
 
 #todo-area h2, p {
   color:rgb(219, 219, 219);
-}
-
-#todo-area h2 {
-  font-size: 28px;
 }
 
 .details-btn {
@@ -168,6 +163,7 @@ body {
 
 
 .todo-list-container h2 {
+  font-size: 28px;
   margin-top: 10px;
   padding: 0px;
 }
@@ -175,7 +171,7 @@ body {
 .todo-list-container p {
   margin: 10px 0px 15px 0px;
   padding: 0px;
-  width: 250px;
+  width: 840px;
   text-align: justify;
   text-justify: inter-word;
 }
