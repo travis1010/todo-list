@@ -1,6 +1,6 @@
 import { compareAsc } from 'date-fns';
+import uniqid from 'uniqid';
 
-let todoCount = 0;
 
 class Todo {
   
@@ -10,9 +10,8 @@ class Todo {
     this.dueDate = dueDate;
     this.priority = parsePriority(priority)
     this.complete = false;
-    this.dataKey = todoCount;
+    this.dataKey = uniqid();
     this.listDataKey = null;
-    todoCount++;
   }
 
   toggleComplete() {
@@ -49,7 +48,7 @@ class List {
     this.description = description;
     this.complete = false;
     this.todoList = [];
-    this.dataKey = null;
+    this.dataKey = uniqid();
     this.detailedView = detailedView;
   }
 

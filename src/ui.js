@@ -68,17 +68,17 @@ function displayLists(lists) {
 
 function setFormDataKey(dataKey) {
   const todoForm = document.getElementById('todo-form');
-  todoForm.setAttribute('data-key', dataKey);
+  todoForm.setAttribute('data-key', `${dataKey}`);
 }
 
 function setEditFormDataKey(dataKey) {
   const editTodoForm = document.getElementById('edit-todo-form');
-  editTodoForm.setAttribute('data-key', dataKey);
+  editTodoForm.setAttribute('data-key', `${dataKey}`);
 }
 
 function setEditListFormDataKey(dataKey) {
   const editListForm = document.getElementById('edit-list-form');
-  editListForm.setAttribute('data-key', dataKey);
+  editListForm.setAttribute('data-key', `${dataKey}`);
 }
 
 function createTodayListItem() {
@@ -99,6 +99,26 @@ function createTodayListItem() {
   newList.classList.add('list-item');
   newList.setAttribute('onclick', `showTodoList('today')`);
   return newList;
+}
+
+function showEmptyList() {
+  console.log('no lists found!')
+  const todoArea = document.getElementById('todo-area');
+  while(todoArea.firstChild) {
+    todoArea.removeChild(todoArea.firstChild);
+  }
+  const todoListContainer = document.createElement('div');
+  todoListContainer.classList.add('todo-list-container');
+
+  const header = document.createElement('h2');
+  header.textContent = 'No lists found.';
+  const para = document.createElement('p');
+  para.textContent = 'Click Create New List to start your todo list.';
+
+  todoListContainer.appendChild(header);
+  todoListContainer.appendChild(para);
+
+  todoArea.appendChild(todoListContainer);
 }
 
 function createWeekListItem() {
@@ -131,7 +151,7 @@ function createListItem(list){
   amountCompleted.textContent = `${list.numCompleted}/${list.length}`
 
   const deleteButton = document.createElement('button');
-  deleteButton.setAttribute('onclick', `deleteList(event, ${list.dataKey})`);
+  deleteButton.setAttribute('onclick', `deleteList(event, '${list.dataKey}')`);
   deleteButton.classList.add('delete-btn');
 
   const trashIcon = document.createElement('i');
@@ -145,7 +165,7 @@ function createListItem(list){
   editIcon.classList.add('fas');
   editIcon.classList.add('fa-edit');
   editBtn.appendChild(editIcon);
-  editBtn.setAttribute('onclick', `editList(${list.dataKey})`);
+  editBtn.setAttribute('onclick', `editList('${list.dataKey}')`);
 
   rightSideOfItem.appendChild(amountCompleted);
   rightSideOfItem.appendChild(editBtn);
@@ -156,11 +176,12 @@ function createListItem(list){
   newList.appendChild(rightSideOfItem);
   newList.classList.add('list-item');
   newList.setAttribute('data-key', list.dataKey);
-  newList.setAttribute('onclick', `showTodoList(${list.dataKey})`);
+  newList.setAttribute('onclick', `showTodoList('${list.dataKey}')`);
   return newList;
 }
 
 function displayTodoList(list) {
+  console.log(list);
   const todoArea = document.getElementById('todo-area');
   while(todoArea.firstChild) {
     todoArea.removeChild(todoArea.firstChild);
@@ -200,7 +221,7 @@ function displayTodoList(list) {
   const addItem = document.createElement('button');
   addItem.id = 'add-todo-btn';
   addItem.textContent = 'Add Todo';
-  addItem.setAttribute('onclick', `createNewTodo(${list.dataKey})`);
+  addItem.setAttribute('onclick', `createNewTodo('${list.dataKey}')`);
 
   buttons.appendChild(addItem);
   
@@ -298,7 +319,7 @@ function createTodoItem(todo) {
   editIcon.classList.add('fas');
   editIcon.classList.add('fa-edit');
   editBtn.appendChild(editIcon);
-  editBtn.setAttribute('onclick', `editTodo(${todo.dataKey})`);
+  editBtn.setAttribute('onclick', `editTodo('${todo.dataKey}')`);
 
   const deleteBtn = document.createElement('button');
   deleteBtn.classList.add('delete-btn');
@@ -306,9 +327,9 @@ function createTodoItem(todo) {
   deleteIcon.classList.add('fas');
   deleteIcon.classList.add('fa-trash');
   deleteBtn.appendChild(deleteIcon);
-  deleteBtn.setAttribute('onclick', `deleteTodo(${todo.dataKey})`);
+  deleteBtn.setAttribute('onclick', `deleteTodo('${todo.dataKey}')`);
   
-  checkBox.setAttribute('onclick', `clickCheckbox(${todo.dataKey})`)
+  checkBox.setAttribute('onclick', `clickCheckbox('${todo.dataKey}')`)
 
   const priorityFlag = document.createElement('div');
   priorityFlag.classList.add('prio-flag');
@@ -328,7 +349,7 @@ function createTodoItem(todo) {
       break;
   }
   
-  title.setAttribute('onclick', `clickTodo(${todo.dataKey})`)
+  title.setAttribute('onclick', `clickTodo('${todo.dataKey}')`)
 
   leftSide.appendChild(checkBox);
   leftSide.appendChild(title);
@@ -385,4 +406,4 @@ function clearTodoArea() {
 }
 
 export {displayNewListForm, hideNewListForm, displayLists, clearListForm, displayTodoList, displayTodoForm, hideTodoForm, setFormDataKey, clearTodoArea,
-clearTodoForm, displayEditTodoForm, hideEditTodoForm, setEditFormDataKey, displayEditListForm, hideEditListForm, setEditListFormDataKey,};
+clearTodoForm, displayEditTodoForm, hideEditTodoForm, setEditFormDataKey, displayEditListForm, hideEditListForm, setEditListFormDataKey, showEmptyList};

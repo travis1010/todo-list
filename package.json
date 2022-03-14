@@ -18,11 +18,13 @@
   "homepage": "https://github.com/travis1010/todo-list#readme",
   "devDependencies": {
     "webpack": "^5.66.0",
-    "webpack-cli": "^4.9.1"
+    "webpack-cli": "^4.9.2"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.4",
     "date-fns": "^2.28.0",
-    "inline-source-map": "^0.6.2"
+    "firebase": "^9.6.8",
+    "inline-source-map": "^0.6.2",
+    "uniqid": "^5.4.0"
   }
 }

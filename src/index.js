@@ -1,19 +1,31 @@
 import { parseISO, addDays, format, startOfWeek } from 'date-fns';
 import {Todo, List, parsePriority} from './todolists.js';
 import * as UI from './ui.js';
+import { initializeApp } from 'firebase/app';
+import { getFirestore, collection, getDoc, setDoc, doc } from 'firebase/firestore/lite';
+import { getFirebaseConfig } from './firebase-config.js';
+import {
+  getAuth,
+  onAuthStateChanged,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut,
+} from 'firebase/auth';
+
 
 export const lists = (() => {
-  let count = 0;
   let lastDisplayedList = null;
   const arr = []; 
   let currentList = null;
   let todayList = null;
   let weekList = null;
 
+  const clearLists = () => {
+    arr.length = 0;
+  }
+
   const addList = (list) => {
     arr.push(list);
-    list.dataKey = count;
-    count++;
   }
   const getList = (dataKey) => {
     const index = arr.findIndex((list) => {
@@ -72,15 +84,19 @@ export const lists = (() => {
   }
 
   const saveLists = () => {
-    localStorage.clear();
-    lists.arr.forEach((list, index) => {
-      localStorage.setItem(index, JSON.stringify(list));
-    })
+    if(isUserSignedIn()) {
+      const todoLists = []
+      lists.arr.forEach((list) => {
+        todoLists.push(JSON.stringify(list));
+      })
+      saveUserTodos(todoLists);
+    }
   }
 
-  const loadLists = () => {
-    Object.keys(localStorage).forEach((key) => {
-      const listJSON = JSON.parse(localStorage.getItem(key));
+  const loadLists = (savedLists) => {
+    console.log({savedLists})
+    savedLists.forEach((savedList) => {
+      const listJSON = JSON.parse(savedList);
       const list = new List(listJSON["title"], listJSON["description"]);
       lists.addList(list);
       listJSON["todoList"].forEach((todo) => {
@@ -111,6 +127,7 @@ export const lists = (() => {
     getWeekList,
     saveLists,
     loadLists,
+    clearLists
   }
 })();
 
@@ -181,6 +198,9 @@ window.deleteList = function(e, dataKey) {
     UI.clearTodoArea();
   }
   lists.saveLists();
+  if (lists.arr.length === 0) {
+    UI.showEmptyList();
+  }
 }
 
 window.submitListForm = function(e, form) {
@@ -271,7 +291,9 @@ window.cancelEditList = function () {
 }
 
 window.deleteTodo = function (dataKey) {
-  lists.getList(lists.getTodo(dataKey).listDataKey).deleteTodo(dataKey);
+  const thisList = lists.getList(lists.getTodo(dataKey).listDataKey);
+  console.log({thisList});
+  thisList.deleteTodo(dataKey);
   lists.todayList = lists.getTodayList();
   lists.weekList = lists.getWeekList();
   if(lists.currentList.dataKey == 'today') {
@@ -302,61 +324,164 @@ window.toggleDetails = function (listDataKey, currentView) {
   UI.displayTodoList(list);
 }
 
+
+
 function loadDefaultTodos() {
+  lists.clearLists();
   let item1 = new Todo('Wash Car', 'Don\'t forget to wax!', new Date(), '1')
   let item2 = new Todo('Get oil changed', '', addDays(new Date(), 3), '2')
   let item3 = new Todo('Mow the lawn', '', new Date(), '3')
   let item4 = new Todo('Work Out', 'Cardio', addDays(new Date(), 2), '1')
   let item5 = new Todo('Set Dentist Appt', 'Make a new appointment with Dr. Crentist.', addDays(new Date(), 22), '3')
   
-  let defaultList = new List('Default List', 'Welcome to my Todo List app.  Click the >> arrows to show more details for your todo list.  Click the Priority button to sort by the highest priority.  Click the Due Date button to sort by date.  Click on a todo to cross it off the list.  Delete all lists and refresh to bring back the default list.');
-  lists.addList(defaultList);
+  let defaultList = new List('Default List', 'This is the default Todo List.  Make sure you are signed in if you want to save any changes.');
   
   defaultList.addTodo(item1);
   defaultList.addTodo(item2);
   defaultList.addTodo(item3);
   defaultList.addTodo(item4);
   defaultList.addTodo(item5);
-  defaultList.checkCompletion();
   
   item2.toggleComplete();
   item4.toggleComplete();
+
   defaultList.checkCompletion();
-  lists.currentList = defaultList;
-  UI.displayTodoList(defaultList);
+  
+  lists.addList(defaultList);
+  lists.todayList = lists.getTodayList();
+  lists.weekList = lists.getWeekList();
+  UI.displayLists(lists);
+  UI.displayTodoList(lists.arr[0]);
+  lists.currentList = lists.arr[0];
 }
 
 
-//local storage stuff
-function localStorageTest(){
-  var test = 'test';
-  try {
-      localStorage.setItem(test, test);
-      localStorage.removeItem(test);
-      return true;
-  } catch(e) {
-      return false;
-  }
+
+//firebase stuff
+
+window.signIn = async function () {
+  // Sign in Firebase using popup auth and Google as the identity provider.
+  var provider = new GoogleAuthProvider();
+  await signInWithPopup(getAuth(), provider);
 }
 
-function checkLocalStorage() {
-  if(localStorageTest()) {
-    if(localStorage.getItem('0')) {
-      console.log('Lists loaded from localStorage');
-      lists.loadLists();
-    } else {
-      loadDefaultTodos();
-    }
+
+window.signOutUser = () => {
+  // Sign out of Firebase.
+  signOut(getAuth());
+}
+
+// Initialize firebase auth
+function initFirebaseAuth() {
+  // Listen to auth state changes.
+  onAuthStateChanged(getAuth(), authStateObserver);
+}
+
+// Triggers when the auth state change for instance when the user signs-in or signs-out.
+function authStateObserver(user) {
+  const userPicElement = document.getElementById('user-pic');
+  const userNameElement = document.getElementById('user-name');
+  const signOutButtonElement = document.getElementById('logout-btn');
+  const signInButtonElement = document.getElementById('login-btn');
+
+  if (user) {
+    // User is signed in!
+    // Get the signed-in user's profile pic and name.
+    var profilePicUrl = getProfilePicUrl();
+    var userName = getUserName();
+
+    
+    // Set the user's profile pic and name.
+    userPicElement.src = profilePicUrl;
+    userNameElement.textContent = `Hello, ${userName}!`;
+
+    // Show user's profile and sign-out button.
+    userNameElement.removeAttribute('hidden');
+    userPicElement.removeAttribute('hidden');
+    signOutButtonElement.removeAttribute('hidden');
+
+    // Hide sign-in button.
+    signInButtonElement.setAttribute('hidden', 'true');
+
+    // We save the Firebase Messaging Device token and enable notifications. ---------------save todos hereer------------------------
+    getLists(db);
   } else {
+    // User is signed out!
+    // Hide user's profile and sign-out button.
+    userNameElement.setAttribute('hidden', 'true');
+    userPicElement.setAttribute('hidden', 'true');
+    signOutButtonElement.setAttribute('hidden', 'true');
+
+    // Show sign-in button.
+    signInButtonElement.removeAttribute('hidden');
     loadDefaultTodos();
   }
 }
 
+// Returns the signed-in user's profile Pic URL.
+function getProfilePicUrl() {
+  return getAuth().currentUser.photoURL || '/images/profile_placeholder.png';
+}
+
+// Returns the signed-in user's display name.
+function getUserName() {
+  return getAuth().currentUser.displayName;
+}
+
+// Returns true if a user is signed-in.
+function isUserSignedIn() {
+  return !!getAuth().currentUser;
+}
 
 
-checkLocalStorage();
 
-lists.todayList = lists.getTodayList();
-lists.weekList = lists.getWeekList();
 
-UI.displayLists(lists);
+
+// Saves a new message to Cloud Firestore.
+async function saveUserTodos(lists) {
+  const uid = getAuth().currentUser.uid;
+  // Add a new message entry to the Firebase database.
+  try {
+    await setDoc(doc(db, 'users', uid), {
+      uid: uid,
+      name: getUserName(),
+      lists: lists
+    });
+  }
+  catch(error) {
+    console.error('Error writing new message to Firebase Database', error);
+  }
+}
+
+async function getLists(db) {
+  lists.clearLists();
+  const uid = getAuth().currentUser.uid;
+  console.log(uid);
+  const docRef = doc(db, 'users', uid)
+  const todoSnapshot = await getDoc(docRef);
+  if (todoSnapshot.exists()) {
+    const todoLists = todoSnapshot.data();
+    console.log(todoLists.lists);
+    lists.loadLists(todoLists.lists);
+    lists.todayList = lists.getTodayList();
+    lists.weekList = lists.getWeekList();
+    UI.displayLists(lists);
+    if (lists.arr.length > 0) {
+      UI.displayTodoList(lists.arr[0]);
+      lists.currentList = lists.arr[0];
+    } else {
+      UI.showEmptyList();
+    }
+  } else {
+    console.log('doc not found')
+    loadDefaultTodos();
+  }
+}
+
+const app = initializeApp(getFirebaseConfig());
+const db = getFirestore(app);
+
+initFirebaseAuth();
+
+
+
